@@ -33,11 +33,17 @@
 - By implementing two queues (frame_queue & result_queue ) & threading library
 
     -- the function face_rec() can concurrently call frame_queue. 
+
     -- Find the faces and distances.
+
     -- Then return the frame to result_queue
 
+
+
     -- In main, each incoming frame gets sent to frame_queue. 
+
     --The next frame in result_queue gets grabbed and input bounding boxes & names. 
+
     -- Then output the frames to the user
 
 ## Limitations
@@ -61,5 +67,6 @@
             if frame_count % 5 == 0
 
     
-_Note the smaller the number the more "blinky" the bounding boxes become. But increasingly accurate_
+_Note the smaller the number the more "blinky" the bounding boxes become. But increasingly accurate._
+
 _The higher the number, the more steady but less location accuracy of the boxes if you move around_
