@@ -41,7 +41,7 @@
 
      
 
-    ```bash
+    
     -- In main, each incoming frame gets sent to frame_queue. 
 
     --The next frame in result_queue gets grabbed and input bounding boxes & names. 
