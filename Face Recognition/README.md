@@ -22,9 +22,9 @@
 
 - As highlighted by Jaryd, the application can has frame and detection issues. 
 
- --- The higher the cv_scaler, the less accurate it gets in detecting, but the frames are abit faster
+    --- The higher the cv_scaler, the less accurate it gets in detecting, but the frames are abit faster
 
- --- The lower the cv_scaler, the more accurate it gets in detecting. However the slower the frames
+    --- The lower the cv_scaler, the more accurate it gets in detecting. However the slower the frames
     
 ## What I Added
 
@@ -50,13 +50,15 @@
         left *= 2
 
 
-        ```
+   
 
 - However, the bounding boxes can shift abit wildy compared to original source.
 
 - you can increase the fps by adjusting
         ``` bash
+
             if frame_count % 5 == 0
-        ```
-     _Note the smaller the number the more "blinky" the bounding boxes become. But increasingly accurate
-     _ The higher the number, the more steady but less location accuracy of the boxes if you move around
+
+    
+_Note the smaller the number the more "blinky" the bounding boxes become. But increasingly accurate
+_The higher the number, the more steady but less location accuracy of the boxes if you move around
