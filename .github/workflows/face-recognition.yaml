@@ -4,5 +4,7 @@ on:
             - release
 
 jobs:
-    name: test-facial-recognition
-    steps:
+    test:
+        name: test-facial-recognition
+        run-on: [self-hosted,linux,ARM64]
+        steps:
