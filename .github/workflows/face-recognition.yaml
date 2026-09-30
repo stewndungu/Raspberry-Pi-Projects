@@ -8,3 +8,5 @@ jobs:
         name: test-facial-recognition
         run-on: [self-hosted,linux,ARM64]
         steps:
+            name: Capture Face
+            run: python3 
