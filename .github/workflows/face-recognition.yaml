@@ -4,4 +4,5 @@ on:
             - release
 
 jobs:
+    name: test-facial-recognition
     steps:
