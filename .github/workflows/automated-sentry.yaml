@@ -1,0 +1,11 @@
+on:
+  push:
+    branches:
+    -  main
+
+#jobs:
+#  automated_sentry:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v2
