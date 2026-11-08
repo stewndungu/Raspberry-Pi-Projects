@@ -5,8 +5,8 @@ on:
     
 jobs:
   face_recognition:
-    uses: ./.github/workflows/face_recognition.yaml
+    uses: ./.github/workflows/face-recognition.yaml
 
   automated_sentry:
     needs: face_recognition
-    uses: ./.github/workflows/automated_sentry.yaml
+    uses: ./.github/workflows/automated-sentry.yaml
