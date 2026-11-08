@@ -3,15 +3,15 @@ on:
         branches:
             - release
 
-jobs:
-    test:
-        name: test-facial-recognition
-        runs-on: [self-hosted,linux,ARM64]
-        steps:
-            name: Capture Face
-            run: python Face Recognition/image_capture.py
-            name: Train Model
-            run: python Face Recognition/model_training.py
-            name: Facial Recognition
-            run: python Face Recognition/face_recognition.py
+#jobs:
+#    test:
+#        name: test-facial-recognition
+#        runs-on: [self-hosted,linux,ARM64]
+#        steps:
+#            name: Capture Face
+#            run: python Face Recognition/image_capture.py
+#            name: Train Model
+#            run: python Face Recognition/model_training.py
+#            name: Facial Recognition
+#            run: python Face Recognition/face_recognition.py
             
