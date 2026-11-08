@@ -4,10 +4,9 @@ on:
     -  main
     
 jobs:
-  Test-containers:
-    face_recognition:
-      uses: ./.github/workflows/face_recognition.yaml
+  face_recognition:
+    uses: ./.github/workflows/face_recognition.yaml
 
-    automated_sentry:
-      needs: face_recognition
-      uses: ./.github/workflows/automated_sentry.yaml
+  automated_sentry:
+    needs: face_recognition
+    uses: ./.github/workflows/automated_sentry.yaml
