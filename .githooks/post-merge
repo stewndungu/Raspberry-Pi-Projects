@@ -1,0 +1,40 @@
+#!/bin/sh
+# Post-merge: after a `git pull` (or any merge), update the hailo-apps
+# subtree from the upstream Hailo repo.
+#
+# Runs only when the merge actually happened ("Already up to date" skips it).
+# It can't undo the original merge, so failures here just print a warning.
+
+SUBTREE_PREFIX="Automated_Sentry/hailo-apps"
+SUBTREE_REPO="https://github.com/hailo-ai/hailo-apps.git"
+SUBTREE_BRANCH="main"
+
+# `git subtree pull` performs a merge of its own, which would trigger this
+# hook again and loop forever. The variable below marks the inner run.
+if [ -n "$HAILO_SUBTREE_UPDATING" ]; then
+    exit 0
+fi
+
+cd "$(git rev-parse --show-toplevel)" || exit 0
+
+# subtree pull refuses to run with uncommitted changes, so check up front
+# and give a clear message instead of git's error.
+if ! git diff-index --quiet HEAD --; then
+    echo "post-merge: you have uncommitted changes, skipping hailo-apps update."
+    echo "  Run it yourself later with:"
+    echo "  git subtree pull --prefix=\"$SUBTREE_PREFIX\" $SUBTREE_REPO $SUBTREE_BRANCH --squash"
+    exit 0
+fi
+
+echo "post-merge: updating $SUBTREE_PREFIX from $SUBTREE_REPO ($SUBTREE_BRANCH)..."
+
+HAILO_SUBTREE_UPDATING=1 git subtree pull \
+    --prefix="$SUBTREE_PREFIX" "$SUBTREE_REPO" "$SUBTREE_BRANCH" --squash \
+    -m "chore(hailo-apps): update subtree from upstream $SUBTREE_BRANCH"
+
+if [ $? -ne 0 ]; then
+    echo "post-merge: hailo-apps update FAILED (see above)." >&2
+    echo "  If there are merge conflicts, fix them and commit, or undo with: git merge --abort" >&2
+fi
+
+exit 0

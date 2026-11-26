@@ -1,0 +1,40 @@
+#!/bin/sh
+# Pre-push: run the Python unit tests; block the push if any fail.
+# Uses pytest if it's installed, otherwise the built-in unittest runner.
+# Tests are discovered from files named test_*.py.
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+PYTHON=""
+for candidate in python3 python py; do
+    if "$candidate" -c "import sys" >/dev/null 2>&1; then
+        PYTHON="$candidate"
+        break
+    fi
+done
+if [ -z "$PYTHON" ]; then
+    echo "pre-push: no Python interpreter found, skipping tests." >&2
+    exit 0
+fi
+
+echo "pre-push: running unit tests..."
+if "$PYTHON" -c "import pytest" >/dev/null 2>&1; then
+    "$PYTHON" -m pytest -q
+else
+    "$PYTHON" -m unittest discover -s . -p "test_*.py"
+fi
+status=$?
+
+# Exit code 5 = "no tests were found" (both pytest and unittest on 3.12+).
+# Don't block pushes just because no tests exist yet.
+if [ $status -eq 5 ]; then
+    echo "pre-push: no tests found, allowing push."
+    exit 0
+fi
+
+if [ $status -ne 0 ]; then
+    echo "pre-push: tests failed, push aborted." >&2
+    echo "  (bypass with: git push --no-verify)" >&2
+    exit 1
+fi
+exit 0

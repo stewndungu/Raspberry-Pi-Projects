@@ -1,0 +1,46 @@
+#!/bin/sh
+# Pre-commit: make sure every staged Python file is syntactically valid.
+# Checks the *staged* version of each file (what will actually be committed),
+# not whatever is in your working tree.
+
+# Pick a Python that actually runs (python3 on the Pi, python on Windows).
+PYTHON=""
+for candidate in python3 python py; do
+    if "$candidate" -c "import sys" >/dev/null 2>&1; then
+        PYTHON="$candidate"
+        break
+    fi
+done
+if [ -z "$PYTHON" ]; then
+    echo "pre-commit: no Python interpreter found, skipping syntax check." >&2
+    exit 0
+fi
+
+failed=0
+
+# -z / read -d '' keeps filenames with spaces (e.g. "Face Recognition/") intact.
+git diff --cached --name-only -z --diff-filter=ACMR -- '*.py' |
+{
+    while IFS= read -r -d '' file; do
+        if ! git show ":$file" | "$PYTHON" -c "
+import ast, sys
+name = sys.argv[1]
+try:
+    ast.parse(sys.stdin.buffer.read(), filename=name)
+except SyntaxError as e:
+    print(f'  {name}:{e.lineno}:{e.offset}: {e.msg}', file=sys.stderr)
+    sys.exit(1)
+" "$file"; then
+            failed=1
+        fi
+    done
+    exit $failed
+}
+status=$?
+
+if [ $status -ne 0 ]; then
+    echo "pre-commit: syntax errors found, commit aborted." >&2
+    echo "  (bypass with: git commit --no-verify)" >&2
+    exit 1
+fi
+exit 0
